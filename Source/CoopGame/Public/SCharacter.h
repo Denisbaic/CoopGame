@@ -23,6 +23,8 @@ protected:
 
 	void BeginCrouch();
 	void EndCrouch();
+	void BeginJump();
+	void EndJump();
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Components")
 		class UCameraComponent* CameraComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
