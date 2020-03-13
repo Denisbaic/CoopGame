@@ -57,7 +57,6 @@ void ASWeapon::Fire()
 				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
 			TracerEndPoint = Hit.Location;
 		}
-		//DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);
 		
 		if (MuzzleEffect)
 			UGameplayStatics::SpawnEmitterAttached(MuzzleEffect, MeshComponent, MuzzleSocketName);
@@ -77,5 +76,10 @@ void ASWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+FTransform ASWeapon::GetMuzzleTransform() const
+{
+	return MeshComponent ? MeshComponent->GetSocketTransform(MuzzleSocketName) : FTransform();
 }
 
