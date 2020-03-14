@@ -29,6 +29,26 @@ protected:
 		class UCameraComponent* CameraComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		class USpringArmComponent* SpringArmComponent;
+
+	bool bWantsToZoom;
+	UPROPERTY(EditDefaultsOnly, Category = "Player")
+		float ZoomedFOV;
+	/*Default FOV set during begin play*/	
+	float DefaultFOV;
+	UPROPERTY(EditDefaultsOnly, Category = "Player",meta=(ClampMin=0.1,ClampMax=100))
+		float ZoomInterpSpeed;
+
+	void BeginZoom();
+	void EndZoom();
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+		class ASWeapon* CurrentWeapon;
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<ASWeapon> StarterWeaponClass;
+	void StartFire();
+	void StopFire();
+	UPROPERTY(VisibleDefaultsOnly,Category="Player")
+		FName WeaponSocketName;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

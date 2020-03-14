@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Camera/CameraShake.h"
 #include "SWeapon.generated.h"
 
 UCLASS()
@@ -16,21 +17,18 @@ public:
 	ASWeapon();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category="Components")
 		USkeletalMeshComponent* MeshComponent;
-	
-	UFUNCTION(BlueprintCallable,Category="Weapon")
-		virtual void Fire();
-
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category="Weapon")
 		TSubclassOf<UDamageType> DamageType;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 		UParticleSystem* MuzzleEffect;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
-		UParticleSystem* ImpactEffect;
+		UParticleSystem* DefaultImpactEffect;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+		UParticleSystem* FleshImpactEffect;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 		UParticleSystem* TracerEffect;
 
@@ -38,9 +36,28 @@ protected:
 		FName MuzzleSocketName;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 		FName TracerTargetName;
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+		TSubclassOf<UCameraShake> FireCamShake;
+	float BaseDamage;
+	void PlayFireEffects(FVector TracerEndPoint);
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+		virtual void Fire();
+
+	FTimerHandle TimerHandle_TimeBetweenShots;
+
+	float LastFireTime;
+	/*RPM - Bullets per minute fired by weapon*/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+		float RateOfFire;
+	//Derived from RPM
+	float TimeBetweenShots;
+public:
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+		virtual void StartFire();
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+		virtual void StopFire();
 	UFUNCTION(BlueprintCallable)
 		FTransform GetMuzzleTransform() const;
 };

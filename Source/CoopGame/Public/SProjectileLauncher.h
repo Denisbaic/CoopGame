@@ -19,7 +19,7 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 		TSubclassOf<AActor> ProjectileClass;
-
-public:
 	void Fire() override;
+public:
+
 };

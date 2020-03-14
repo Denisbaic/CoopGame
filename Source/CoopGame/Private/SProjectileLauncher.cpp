@@ -5,6 +5,7 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 #include "CoopGame/Public/SCharacter.h"
+#include "CoopGame/CoopGame.h"
 
 ASProjectileLauncher::ASProjectileLauncher():Super()
 {
@@ -26,7 +27,7 @@ void ASProjectileLauncher::Fire()
 		QueryParams.bTraceComplex = true;
 
 		FHitResult HitResult;
-		if(GetWorld()->LineTraceSingleByChannel(HitResult,ViewPoint,TraceEnd,ECC_Visibility, QueryParams))
+		if(GetWorld()->LineTraceSingleByChannel(HitResult,ViewPoint,TraceEnd, COLLISION_WEAPON, QueryParams))
 		{
 			TraceEnd = HitResult.Location;
 		}
@@ -40,5 +41,6 @@ void ASProjectileLauncher::Fire()
 		//DrawDebugLine(GetWorld(), MuzzleLocation, TraceEnd, FColor::Red, false, 3.f, 0, 3.f);
 
 		GetWorld()->SpawnActor(ProjectileClass, &MuzzleLocation, &ShotDirection, ActorSpawnParameters);
+		PlayFireEffects(TraceEnd);
 	}
 }
