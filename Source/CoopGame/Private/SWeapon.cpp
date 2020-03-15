@@ -108,7 +108,7 @@ void ASWeapon::PlayFireEffects(FVector TracerEndPoint)
 	if (MuzzleEffect)
 		UGameplayStatics::SpawnEmitterAttached(MuzzleEffect, MeshComponent, MuzzleSocketName);
 
-	if (MuzzleEffect)
+	if (TracerEffect)
 	{
 		FVector MuzzleLocation = MeshComponent->GetSocketLocation(MuzzleSocketName);
 		UParticleSystemComponent* TempEmitter = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), TracerEffect, MuzzleLocation);
@@ -124,6 +124,8 @@ void ASWeapon::PlayFireEffects(FVector TracerEndPoint)
 			PC->ClientPlayCameraShake(FireCamShake);
 		}
 	}
+	if (SoundOfFire)
+		UGameplayStatics::PlaySound2D(GetWorld(), SoundOfFire);
 }
 
 FTransform ASWeapon::GetMuzzleTransform() const

@@ -31,7 +31,6 @@ protected:
 		UParticleSystem* FleshImpactEffect;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 		UParticleSystem* TracerEffect;
-
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 		FName MuzzleSocketName;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
@@ -40,7 +39,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 		TSubclassOf<UCameraShake> FireCamShake;
 	float BaseDamage;
-	void PlayFireEffects(FVector TracerEndPoint);
+	virtual void PlayFireEffects(FVector TracerEndPoint);
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 		virtual void Fire();
 
@@ -52,6 +51,9 @@ protected:
 		float RateOfFire;
 	//Derived from RPM
 	float TimeBetweenShots;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+		USoundBase* SoundOfFire;
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")

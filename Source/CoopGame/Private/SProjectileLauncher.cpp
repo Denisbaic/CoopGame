@@ -42,5 +42,6 @@ void ASProjectileLauncher::Fire()
 
 		GetWorld()->SpawnActor(ProjectileClass, &MuzzleLocation, &ShotDirection, ActorSpawnParameters);
 		PlayFireEffects(TraceEnd);
+		LastFireTime = GetWorld()->GetTimeSeconds();
 	}
 }
