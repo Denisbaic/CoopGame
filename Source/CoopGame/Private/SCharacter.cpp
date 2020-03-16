@@ -9,18 +9,25 @@
 #include "SWeapon.h"
 #include "Engine/World.h"
 #include "Components/SkeletalMeshComponent.h"
-
+#include "Components/CapsuleComponent.h"
+#include "CoopGame/CoopGame.h"
+#include "SHealthComponent.h"
 // Sets default values
 ASCharacter::ASCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	HealthComponent = CreateDefaultSubobject<USHealthComponent>(TEXT("Health"));
+
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->bUsePawnControlRotation = true;
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 
     ACharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
+
+	GetCapsuleComponent()->SetCollisionResponseToChannel(COLLISION_WEAPON,ECR_Ignore);
+
 	ZoomedFOV = 65.f;
 	bWantsToZoom = false;
 	ZoomInterpSpeed = 20.f;
@@ -42,6 +49,7 @@ void ASCharacter::BeginPlay()
 	{
 		CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocketName);
 	}
+	HealthComponent->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 }
 
 void ASCharacter::MoveForward(float Value)
@@ -97,6 +105,20 @@ void ASCharacter::StopFire()
 	if (CurrentWeapon)
 	{
 		CurrentWeapon->StopFire();
+	}
+}
+
+void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta,
+	const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
+{
+	if(Health<=0.0f && !bDied)
+	{
+		//Die!
+		bDied = true;
+		GetMovementComponent()->StopMovementImmediately();
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+		DetachFromControllerPendingDestroy();
+		SetLifeSpan(10.f);
 	}
 }
 

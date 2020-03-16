@@ -29,6 +29,8 @@ protected:
 		class UCameraComponent* CameraComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		class USpringArmComponent* SpringArmComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		class USHealthComponent* HealthComponent;
 
 	bool bWantsToZoom;
 	UPROPERTY(EditDefaultsOnly, Category = "Player")
@@ -49,6 +51,11 @@ protected:
 	void StopFire();
 	UPROPERTY(VisibleDefaultsOnly,Category="Player")
 		FName WeaponSocketName;
+
+	UFUNCTION()
+		void OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+	UPROPERTY(BlueprintReadOnly,Category="Player")
+		bool bDied;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
