@@ -7,6 +7,17 @@
 #include "Camera/CameraShake.h"
 #include "SWeapon.generated.h"
 
+// Contains info of a single hitscan weapon linetrace
+USTRUCT()
+struct FHitScanTrace
+{
+	GENERATED_BODY()
+	UPROPERTY()
+		TEnumAsByte<EPhysicalSurface> SurfaceType;
+	UPROPERTY()
+		FVector_NetQuantize TraceTo;
+};
+
 UCLASS()
 class COOPGAME_API ASWeapon : public AActor
 {
@@ -40,9 +51,12 @@ protected:
 		TSubclassOf<UCameraShake> FireCamShake;
 	float BaseDamage;
 	virtual void PlayFireEffects(FVector TracerEndPoint);
+	void PlayImpactEffects(EPhysicalSurface SurfaceType, FVector TraceImpact);
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 		virtual void Fire();
-
+	
+	UFUNCTION(Server,Reliable, WithValidation)
+		void ServerFire();
 	FTimerHandle TimerHandle_TimeBetweenShots;
 
 	float LastFireTime;
@@ -51,9 +65,12 @@ protected:
 		float RateOfFire;
 	//Derived from RPM
 	float TimeBetweenShots;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 		USoundBase* SoundOfFire;
+	UPROPERTY(ReplicatedUsing=OnRep_HitScanTrace)
+		FHitScanTrace HitScanTrace;
+	UFUNCTION()
+		void OnRep_HitScanTrace();
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")

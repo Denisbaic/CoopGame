@@ -43,7 +43,7 @@ protected:
 	void BeginZoom();
 	void EndZoom();
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UPROPERTY(Replicated,BlueprintReadWrite)
 		class ASWeapon* CurrentWeapon;
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<ASWeapon> StarterWeaponClass;
@@ -56,7 +56,8 @@ protected:
 		void OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 	UPROPERTY(BlueprintReadOnly,Category="Player")
 		bool bDied;
-public:	
+public:
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -64,4 +65,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual FVector GetPawnViewLocation() const override;
+
+
 };
